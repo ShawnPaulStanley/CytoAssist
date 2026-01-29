@@ -15,6 +15,8 @@ CytoAssist is a ResNet18-based classification tool designed to assist in Fine Ne
 - Interactive web interface built with Streamlit
 - Real-time inference with detailed progress logging
 - Support for common image formats (PNG, JPG, JPEG)
+- **Batch processing** - Automatically process images from a watched folder
+- **Auto-refresh** - Website updates automatically when new images are added
 
 ## Prerequisites
 
@@ -82,19 +84,62 @@ CytoAssist/
 ├── frontend/
 │   ├── index.html                  # Frontend UI template
 │   └── fonts/                      # Custom font files
+├── batch_input/                    # Drop images here for auto-processing
+├── batch_output/                   # Processed results (heatmaps + CSV)
+├── batch_process.py                # Standalone batch processing script
+├── watch_folder.py                 # Keeps only newest image in batch_input
 └── README.md
 ```
 
 ## Usage
 
+### Option 1: Manual Upload
+
 1. Launch the application using the instructions above
-2. Use the file uploader in the sidebar to select a cytology image
+2. Use the file uploader to select a cytology image
 3. The system will:
    - Display the uploaded image
    - Run the classification model
    - Show prediction results with confidence scores
    - Generate a Grad-CAM heatmap highlighting regions of interest
 4. Review the results in the interactive interface
+
+### Option 2: Automated Folder Watching (Recommended)
+
+1. Start the Streamlit app:
+```bash
+cd backend
+streamlit run app.py
+```
+
+2. In a separate terminal, start the folder watcher:
+```bash
+python watch_folder.py
+```
+
+3. Drop an image into the `batch_input/` folder
+   - The folder watcher ensures only the newest image is kept
+   - The website automatically detects and processes the image
+   - Results appear in the browser within 2 seconds
+
+### Option 3: Batch Processing (Offline)
+
+Process multiple images without the web interface:
+
+```bash
+# Process all images in batch_input and save results to batch_output
+python batch_process.py
+
+# Continuously watch for new images
+python batch_process.py --watch
+
+# Custom input/output folders
+python batch_process.py --input ./my_images --output ./my_results
+```
+
+Results are saved to `batch_output/`:
+- `{filename}_heatmap.png` - Grad-CAM visualization
+- `results.csv` - Predictions with confidence scores
 
 ## Model Details
 
