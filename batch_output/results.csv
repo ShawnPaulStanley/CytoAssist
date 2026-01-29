@@ -1,0 +1,2 @@
+filename,prediction,benign_prob,suspicious_prob,heatmap_file,timestamp
+WhatsApp Image 2026-01-29 at 9.33.45 PM.jpeg,Benign,0.9704319313168526,0.02956806868314743,WhatsApp Image 2026-01-29 at 9.33.45 PM_heatmap.png,2026-01-30T01:17:48.185773
