@@ -469,36 +469,44 @@ with st.sidebar:
     auto_watch = st.toggle("Watch batch_input folder", value=True, help="Automatically load images from batch_input folder")
     
     if auto_watch:
-        # Store last known mtime to detect changes
+        # Get current file info
+        batch_image_path = get_batch_input_image()
         current_mtime = get_batch_image_mtime()
+        current_file = os.path.basename(batch_image_path) if batch_image_path else None
         
+        # Initialize session state for tracking
         if "last_batch_mtime" not in st.session_state:
             st.session_state.last_batch_mtime = current_mtime
+        if "last_batch_file" not in st.session_state:
+            st.session_state.last_batch_file = current_file
         
-        batch_image_path = get_batch_input_image()
         if batch_image_path:
-            st.success(f"📁 Found: {os.path.basename(batch_image_path)}")
+            st.success(f"📁 Found: {current_file}")
         else:
             st.info("📁 No image in batch_input/")
         
-        # Auto-refresh using JavaScript injection (no external dependency)
+        # Refresh interval slider
         refresh_interval = st.slider("Refresh interval (seconds)", min_value=1, max_value=10, value=2)
         
-        # Inject JavaScript for auto-refresh
-        st.markdown(
-            f"""
-            <script>
-                setTimeout(function() {{
-                    window.location.reload();
-                }}, {refresh_interval * 1000});
-            </script>
-            """,
-            unsafe_allow_html=True
+        # Check if file changed (different file or different mtime)
+        file_changed = (
+            current_mtime != st.session_state.last_batch_mtime or
+            current_file != st.session_state.last_batch_file
         )
         
-        # Also check for file changes and trigger rerun
-        if current_mtime != st.session_state.last_batch_mtime:
+        if file_changed and current_file is not None:
             st.session_state.last_batch_mtime = current_mtime
+            st.session_state.last_batch_file = current_file
+            st.rerun()
+        
+        # Use Streamlit's native rerun with time tracking for polling
+        import time as _time
+        if "last_check_time" not in st.session_state:
+            st.session_state.last_check_time = _time.time()
+        
+        # Trigger rerun after interval to poll for changes
+        if _time.time() - st.session_state.last_check_time >= refresh_interval:
+            st.session_state.last_check_time = _time.time()
             st.rerun()
 
 st.divider()
