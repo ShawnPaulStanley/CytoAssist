@@ -2,6 +2,8 @@ import os
 import base64
 import io
 import sys
+import glob
+import shutil
 from datetime import datetime
 from typing import Optional, Tuple
 
@@ -15,6 +17,35 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torchvision import models, transforms
+
+
+# -----------------------------
+# Batch input folder monitoring
+# -----------------------------
+BATCH_INPUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "batch_input")
+SUPPORTED_EXTENSIONS = ("*.png", "*.jpg", "*.jpeg", "*.PNG", "*.JPG", "*.JPEG")
+
+
+def get_batch_input_image() -> Optional[str]:
+    """Get the first image file from batch_input folder, if any."""
+    if not os.path.exists(BATCH_INPUT_DIR):
+        return None
+    
+    for ext in SUPPORTED_EXTENSIONS:
+        matches = glob.glob(os.path.join(BATCH_INPUT_DIR, ext))
+        # Exclude README.txt and other non-image files
+        image_files = [f for f in matches if not f.endswith('.txt')]
+        if image_files:
+            return image_files[0]
+    return None
+
+
+def get_batch_image_mtime() -> Optional[float]:
+    """Get modification time of the batch input image for change detection."""
+    image_path = get_batch_input_image()
+    if image_path and os.path.exists(image_path):
+        return os.path.getmtime(image_path)
+    return None
 
 
 # Terminal logging utilities
@@ -430,20 +461,85 @@ with st.sidebar:
             "For local demos, update this to where the .pth exists on your machine."
         ),
     )
+    
+    st.divider()
+    st.subheader("Batch Input Monitor")
+    
+    # Auto-refresh toggle for batch folder monitoring
+    auto_watch = st.toggle("Watch batch_input folder", value=True, help="Automatically load images from batch_input folder")
+    
+    if auto_watch:
+        # Get current file info
+        batch_image_path = get_batch_input_image()
+        current_mtime = get_batch_image_mtime()
+        current_file = os.path.basename(batch_image_path) if batch_image_path else None
+        
+        # Initialize session state for tracking
+        if "last_batch_mtime" not in st.session_state:
+            st.session_state.last_batch_mtime = current_mtime
+        if "last_batch_file" not in st.session_state:
+            st.session_state.last_batch_file = current_file
+        
+        if batch_image_path:
+            st.success(f"📁 Found: {current_file}")
+        else:
+            st.info("📁 No image in batch_input/")
+        
+        # Refresh interval slider
+        refresh_interval = st.slider("Refresh interval (seconds)", min_value=1, max_value=10, value=2)
+        
+        # Check if file changed (different file or different mtime)
+        file_changed = (
+            current_mtime != st.session_state.last_batch_mtime or
+            current_file != st.session_state.last_batch_file
+        )
+        
+        if file_changed and current_file is not None:
+            st.session_state.last_batch_mtime = current_mtime
+            st.session_state.last_batch_file = current_file
+            st.rerun()
+        
+        # Use Streamlit's native rerun with time tracking for polling
+        import time as _time
+        if "last_check_time" not in st.session_state:
+            st.session_state.last_check_time = _time.time()
+        
+        # Trigger rerun after interval to poll for changes
+        if _time.time() - st.session_state.last_check_time >= refresh_interval:
+            st.session_state.last_check_time = _time.time()
+            st.rerun()
 
 st.divider()
 
 st.header("Upload Image")
-uploaded = st.file_uploader("Upload a PNG or JPG image", type=["png", "jpg", "jpeg"], accept_multiple_files=False)
 
-if uploaded is None:
+# Check for batch input image first
+batch_image_path = get_batch_input_image() if auto_watch else None
+
+if batch_image_path:
+    st.info(f"📁 Auto-loaded from batch_input: **{os.path.basename(batch_image_path)}**")
+    uploaded = None  # Clear file uploader when using batch
+    use_batch_image = True
+else:
+    uploaded = st.file_uploader("Upload a PNG or JPG image", type=["png", "jpg", "jpeg"], accept_multiple_files=False)
+    use_batch_image = False
+
+if uploaded is None and not use_batch_image:
     st.info("Upload an image to run decision-support screening and view a Grad-CAM attention map.")
     st.stop()
 
 # Load and show image
 log_section("IMAGE PROCESSING")
-log_progress("Loading uploaded image...", 50)
-original_pil = pil_from_upload(uploaded)
+log_progress("Loading image...", 50)
+
+if use_batch_image:
+    # Load from batch_input folder
+    original_pil = Image.open(batch_image_path).convert("RGB")
+    image_source_name = os.path.basename(batch_image_path)
+else:
+    # Load from file uploader
+    original_pil = pil_from_upload(uploaded)
+    image_source_name = uploaded.name
 log_progress(f"Image loaded: {original_pil.size[0]}x{original_pil.size[1]} pixels ✓", 100)
 
 # Layout: image + results
