@@ -45,7 +45,12 @@ source .venv/bin/activate
 
 3. Install required dependencies:
 ```bash
-pip install streamlit torch torchvision pillow numpy opencv-python matplotlib scikit-learn
+pip install -r requirements.txt
+```
+
+Or install manually:
+```bash
+pip install streamlit torch torchvision pillow numpy opencv-python-headless matplotlib scikit-learn grad-cam
 ```
 
 ## Running the Application
@@ -123,6 +128,42 @@ If port 8501 is occupied, Streamlit will automatically use the next available po
 Verify all dependencies are installed in your active Python environment using:
 ```bash
 pip list
+```
+
+## Deploy to Streamlit Cloud
+
+This project is configured for one-click deployment to Streamlit Cloud (share.streamlit.io).
+
+### Deployment Steps
+
+1. Push the repository to GitHub (if not already done)
+
+2. Go to [share.streamlit.io](https://share.streamlit.io)
+
+3. Sign in with your GitHub account
+
+4. Click "New app" and configure:
+   - Repository: `ShawnPaulStanley/CytoAssist`
+   - Branch: `main`
+   - Main file path: `streamlit_app.py`
+
+5. Click "Deploy"
+
+The app will automatically install dependencies from `requirements.txt` and start running.
+
+### Project Structure for Streamlit Cloud
+
+```
+CytoAssist/
+├── streamlit_app.py          # Entry point for Streamlit Cloud
+├── requirements.txt          # Python dependencies
+├── .streamlit/
+│   └── config.toml           # Streamlit configuration
+├── backend/
+│   ├── app.py                # Main application logic
+│   └── cytoassist_resnet18.pth
+└── frontend/
+    └── index.html
 ```
 
 ## License
