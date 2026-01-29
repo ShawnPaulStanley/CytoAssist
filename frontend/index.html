@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CytoAssist – AI Assisted FNAC Screening</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        /* Zalando Sans Expanded Font */
+        @font-face {
+            font-family: 'Zalando Sans Expanded';
+            src: url('fonts/static/ZalandoSansExpanded-Light.ttf') format('truetype');
+            font-weight: 300;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Zalando Sans Expanded';
+            src: url('fonts/static/ZalandoSansExpanded-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Zalando Sans Expanded';
+            src: url('fonts/static/ZalandoSansExpanded-Medium.ttf') format('truetype');
+            font-weight: 500;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Zalando Sans Expanded';
+            src: url('fonts/static/ZalandoSansExpanded-SemiBold.ttf') format('truetype');
+            font-weight: 600;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Zalando Sans Expanded';
+            src: url('fonts/static/ZalandoSansExpanded-Bold.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Zalando Sans Expanded', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        :root {
+            /* Dark Theme (Default) */
+            --bg-primary: #000000;
+            --bg-secondary: #1a1a1a;
+            --bg-hover: #2a2a2a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --border-color: #333333;
+        }
+
+        [data-theme="light"] {
+            /* Light Theme */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-hover: #e8e8e8;
+            --text-primary: #000000;
+            --text-secondary: #666666;
+            --border-color: #d0d0d0;
+        }
+
+        body {
+            font-family: 'Zalando Sans Expanded', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            scroll-behavior: smooth;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* --- Header --- */
+        header {
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            background: var(--bg-primary);
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        .subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-top: 0.25rem;
+        }
+
+        .theme-toggle {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'Zalando Sans Expanded', sans-serif;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+            transform: scale(1.05);
+        }
+
+        .theme-toggle i {
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+        }
+
+        /* --- Container --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* --- Section Spacing --- */
+        section {
+            padding: 4rem 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        section:first-of-type {
+            padding-top: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        /* --- Upload Section --- */
+        #uploadSection {
+            min-height: 80vh;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 4rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: var(--bg-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--text-primary);
+            background-color: var(--bg-hover);
+            transform: translateY(-2px);
+        }
+
+        .upload-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1.5rem;
+            opacity: 0.7;
+        }
+
+        .upload-text {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-subtext {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        button, input {
+            font-family: 'Zalando Sans Expanded', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* --- Review Section --- */
+        #reviewSection {
+            display: none;
+            min-height: 90vh;
+        }
+
+        .image-carousel {
+            position: relative;
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+
+        .carousel-container {
+            position: relative;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--bg-secondary);
+        }
+
+        .carousel-slide {
+            display: none;
+            width: 100%;
+        }
+
+        .carousel-slide.active {
+            display: block;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            height: 500px;
+            object-fit: contain;
+            background: var(--bg-primary);
+        }
+
+        .carousel-info {
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .carousel-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .carousel-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            font-family: 'Zalando Sans Expanded', sans-serif;
+        }
+
+        .carousel-btn:hover:not(:disabled) {
+            background: var(--bg-hover);
+            border-color: var(--text-primary);
+        }
+
+        .carousel-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .submit-btn {
+            display: block;
+            margin: 3rem auto 0;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 8px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Zalando Sans Expanded', sans-serif;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        /* --- Loading Section --- */
+        #loadingSection {
+            display: none;
+            min-height: 60vh;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid var(--text-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+        }
+
+        /* --- Results Section --- */
+        #resultsSection {
+            display: none;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .result-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .confidence-item {
+            margin-bottom: 2rem;
+        }
+
+        .confidence-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .confidence-label {
+            font-weight: 500;
+        }
+
+        .confidence-value {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .progress-track {
+            height: 10px;
+            background: var(--bg-primary);
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 0%;
+        }
+
+        .bar-suspicious { 
+            background: linear-gradient(90deg, #ff4444, #cc0000);
+        }
+        
+        .bar-benign { 
+            background: linear-gradient(90deg, #44ff44, #00cc00);
+        }
+
+        .explanation-text {
+            margin-top: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* --- Grad-CAM Visualization --- */
+        .gradcam-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .gradcam-box {
+            position: relative;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--bg-primary);
+        }
+
+        .gradcam-box img,
+        .gradcam-box canvas {
+            width: 100%;
+            height: 300px;
+            object-fit: contain;
+        }
+
+        .gradcam-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 0.5rem;
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* --- Reset Section --- */
+        .reset-section {
+            text-align: center;
+            padding: 4rem 0;
+            border-top: 1px solid var(--border-color);
+            margin-top: 3rem;
+        }
+
+        .reset-btn {
+            background: transparent;
+            border: 2px solid var(--text-primary);
+            color: var(--text-primary);
+            padding: 1rem 3rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Zalando Sans Expanded', sans-serif;
+        }
+
+        .reset-btn:hover {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            transform: scale(1.05);
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            .results-grid,
+            .gradcam-container {
+                grid-template-columns: 1fr;
+            }
+            
+            section {
+                padding: 3rem 0;
+                min-height: auto;
+            }
+            
+            .carousel-slide img {
+                height: 400px;
+            }
+        }
+
+        /* --- Utility Classes --- */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div>
+                <div class="logo">CytoAssist</div>
+                <div class="subtitle">AI-Assisted FNAC Screening System</div>
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="ph ph-sun" id="themeIcon"></i>
+                <span id="themeText">Light Mode</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Upload Section -->
+    <section id="uploadSection">
+        <div class="container">
+            <h2 class="section-title">Upload Tissue Cell Images</h2>
+            
+            <div class="upload-area" id="dropZone">
+                <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <div class="upload-text">Drop images here or click to browse</div>
+                <div class="upload-subtext">Supports PNG, JPG, JPEG formats • Multiple images allowed</div>
+                <input type="file" id="fileInput" accept="image/png, image/jpeg, image/jpg" multiple>
+            </div>
+        </div>
+    </section>
+
+    <!-- Review Section -->
+    <section id="reviewSection">
+        <div class="container">
+            <h2 class="section-title">Review Uploaded Images</h2>
+            
+            <div class="image-carousel">
+                <div class="carousel-container">
+                    <div id="carouselSlides"></div>
+                    <div class="carousel-info">
+                        <span id="imageCounter">Image 1 of 1</span>
+                    </div>
+                </div>
+                
+                <div class="carousel-controls">
+                    <button class="carousel-btn" id="prevBtn" disabled>Previous</button>
+                    <button class="carousel-btn" id="nextBtn">Next</button>
+                </div>
+            </div>
+            
+            <button class="submit-btn" id="submitBtn">Submit for Analysis</button>
+        </div>
+    </section>
+
+    <!-- Loading Section -->
+    <section id="loadingSection">
+        <div class="container">
+            <div class="spinner"></div>
+            <div class="loading-text">Analyzing tissue morphology...</div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section id="resultsSection">
+        <div class="container">
+            <h2 class="section-title">Analysis Results</h2>
+            
+            <div class="results-grid">
+                <!-- Confidence Scores Card -->
+                <div class="result-card">
+                    <div class="card-title">Screening Assessment</div>
+                    
+                    <div class="confidence-item">
+                        <div class="confidence-header">
+                            <span class="confidence-label">Suspicious Features</span>
+                            <span class="confidence-value" id="scoreSuspicious">--%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-bar bar-suspicious" id="barSuspicious"></div>
+                        </div>
+                    </div>
+
+                    <div class="confidence-item">
+                        <div class="confidence-header">
+                            <span class="confidence-label">Benign Features</span>
+                            <span class="confidence-value" id="scoreBenign">--%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-bar bar-benign" id="barBenign"></div>
+                        </div>
+                    </div>
+
+                    <div class="explanation-text">
+                        <strong>Clinical Note:</strong> These confidence scores represent the AI model's assessment based on cellular morphology patterns. Results should be interpreted by qualified medical professionals and are not diagnostic.
+                    </div>
+                </div>
+
+                <!-- GRAD CAM++ Explanation Card -->
+                <div class="result-card">
+                    <div class="card-title">Model Attention Map (GRAD CAM++)</div>
+                    
+                    <div class="gradcam-container">
+                        <div class="gradcam-box">
+                            <img id="imgOriginal" src="" alt="Original Image">
+                            <div class="gradcam-label">Original Image</div>
+                        </div>
+                        <div class="gradcam-box">
+                            <canvas id="heatmapCanvas" style="width: 100%; height: 300px;"></canvas>
+                            <div class="gradcam-label">GRAD CAM++ Heatmap</div>
+                        </div>
+                    </div>
+
+                    <div class="explanation-text">
+                        The highlighted regions indicate cellular areas that most influenced the model's prediction. Warmer colors (red/yellow) represent higher attention, showing which morphological features were most significant in the analysis.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reset Option -->
+            <div class="reset-section">
+                <button class="reset-btn" onclick="resetAnalysis()">Upload New Samples</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- JavaScript -->
+    <script>
+        // Theme Management
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const themeText = document.getElementById('themeText');
+        const html = document.documentElement;
+
+        // Load saved theme or default to dark
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') {
+            html.setAttribute('data-theme', 'light');
+            themeIcon.className = 'ph ph-moon';
+            themeText.textContent = 'Dark Mode';
+        }
+
+        // Toggle theme
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            if (newTheme === 'light') {
+                html.setAttribute('data-theme', 'light');
+                themeIcon.className = 'ph ph-moon';
+                themeText.textContent = 'Dark Mode';
+            } else {
+                html.removeAttribute('data-theme');
+                themeIcon.className = 'ph ph-sun';
+                themeText.textContent = 'Light Mode';
+            }
+            
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // State management
+        let uploadedImages = [];
+        let currentImageIndex = 0;
+
+        // DOM elements
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const uploadSection = document.getElementById('uploadSection');
+        const reviewSection = document.getElementById('reviewSection');
+        const loadingSection = document.getElementById('loadingSection');
+        const resultsSection = document.getElementById('resultsSection');
+        const carouselSlides = document.getElementById('carouselSlides');
+        const imageCounter = document.getElementById('imageCounter');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Drag and drop handlers
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+            if (files.length > 0) handleFiles(files);
+        });
+
+        // Click to upload
+        dropZone.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files);
+            if (files.length > 0) handleFiles(files);
+        });
+
+        // Handle uploaded files
+        function handleFiles(files) {
+            uploadedImages = [];
+            let loadedCount = 0;
+
+            files.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedImages.push({
+                        name: file.name,
+                        dataUrl: e.target.result,
+                        index: index
+                    });
+                    loadedCount++;
+
+                    if (loadedCount === files.length) {
+                        showReviewSection();
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Show review section
+        function showReviewSection() {
+            uploadSection.style.display = 'none';
+            reviewSection.style.display = 'flex';
+            currentImageIndex = 0;
+            renderCarousel();
+            updateCarouselButtons();
+            
+            // Smooth scroll to review section
+            reviewSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Render carousel
+        function renderCarousel() {
+            carouselSlides.innerHTML = '';
+            uploadedImages.forEach((img, index) => {
+                const slide = document.createElement('div');
+                slide.className = `carousel-slide ${index === currentImageIndex ? 'active' : ''}`;
+                slide.innerHTML = `<img src="${img.dataUrl}" alt="${img.name}">`;
+                carouselSlides.appendChild(slide);
+            });
+            imageCounter.textContent = `Image ${currentImageIndex + 1} of ${uploadedImages.length}`;
+        }
+
+        // Carousel navigation
+        prevBtn.addEventListener('click', () => {
+            if (currentImageIndex > 0) {
+                currentImageIndex--;
+                renderCarousel();
+                updateCarouselButtons();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentImageIndex < uploadedImages.length - 1) {
+                currentImageIndex++;
+                renderCarousel();
+                updateCarouselButtons();
+            }
+        });
+
+        function updateCarouselButtons() {
+            prevBtn.disabled = currentImageIndex === 0;
+            nextBtn.disabled = currentImageIndex === uploadedImages.length - 1;
+        }
+
+        // Submit for analysis
+        submitBtn.addEventListener('click', () => {
+            reviewSection.style.display = 'none';
+            loadingSection.style.display = 'flex';
+            
+            // Simulate analysis (2-3 seconds)
+            setTimeout(() => {
+                showResults();
+            }, 2500);
+        });
+
+        // Generate GRAD CAM++ heatmap overlay
+        function generateHeatmapOverlay(imageDataUrl, canvas) {
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            
+            img.onload = function() {
+                // Set canvas dimensions
+                canvas.width = img.width;
+                canvas.height = img.height;
+                
+                // Draw original image
+                ctx.drawImage(img, 0, 0, img.width, img.height);
+                
+                // Create heatmap overlay
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const data = imageData.data;
+                
+                // Generate attention map (simulated - in production comes from backend)
+                // Focus attention on center-right area (typical for cell clusters)
+                const centerX = canvas.width * 0.6;
+                const centerY = canvas.height * 0.4;
+                const maxRadius = Math.min(canvas.width, canvas.height) * 0.4;
+                
+                for (let y = 0; y < canvas.height; y++) {
+                    for (let x = 0; x < canvas.width; x++) {
+                        const idx = (y * canvas.width + x) * 4;
+                        
+                        // Calculate distance from attention center
+                        const dx = x - centerX;
+                        const dy = y - centerY;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        
+                        // Generate attention value (0-1) with some randomness
+                        let attention = Math.max(0, 1 - (distance / maxRadius));
+                        attention = Math.pow(attention, 1.5) * (0.7 + Math.random() * 0.3);
+                        
+                        if (attention > 0.2) {
+                            // Apply heatmap color (jet colormap)
+                            let r, g, b;
+                            if (attention < 0.4) {
+                                // Blue to Cyan
+                                const t = attention / 0.4;
+                                r = 0;
+                                g = Math.floor(t * 255);
+                                b = 255;
+                            } else if (attention < 0.6) {
+                                // Cyan to Yellow
+                                const t = (attention - 0.4) / 0.2;
+                                r = Math.floor(t * 255);
+                                g = 255;
+                                b = Math.floor((1 - t) * 255);
+                            } else {
+                                // Yellow to Red
+                                const t = (attention - 0.6) / 0.4;
+                                r = 255;
+                                g = Math.floor((1 - t) * 255);
+                                b = 0;
+                            }
+                            
+                            // Blend with original image (alpha blending)
+                            const alpha = attention * 0.5;
+                            data[idx] = data[idx] * (1 - alpha) + r * alpha;
+                            data[idx + 1] = data[idx + 1] * (1 - alpha) + g * alpha;
+                            data[idx + 2] = data[idx + 2] * (1 - alpha) + b * alpha;
+                        }
+                    }
+                }
+                
+                ctx.putImageData(imageData, 0, 0);
+            };
+            
+            img.src = imageDataUrl;
+        }
+
+        // Show results
+        function showResults() {
+            loadingSection.style.display = 'none';
+            resultsSection.style.display = 'block';
+            
+            // Use first uploaded image for display
+            const firstImage = uploadedImages[0].dataUrl;
+            document.getElementById('imgOriginal').src = firstImage;
+            
+            // Generate GRAD CAM++ heatmap
+            const heatmapCanvas = document.getElementById('heatmapCanvas');
+            generateHeatmapOverlay(firstImage, heatmapCanvas);
+
+            // Generate mock predictions (in production, this comes from backend)
+            const isSuspicious = Math.random() > 0.5;
+            let suspiciousVal, benignVal;
+
+            if (isSuspicious) {
+                suspiciousVal = Math.floor(Math.random() * (92 - 65) + 65);
+                benignVal = 100 - suspiciousVal;
+            } else {
+                benignVal = Math.floor(Math.random() * (95 - 70) + 70);
+                suspiciousVal = 100 - benignVal;
+            }
+
+            // Animate progress bars
+            setTimeout(() => {
+                document.getElementById('barSuspicious').style.width = suspiciousVal + '%';
+                document.getElementById('scoreSuspicious').textContent = suspiciousVal + '%';
+                document.getElementById('barBenign').style.width = benignVal + '%';
+                document.getElementById('scoreBenign').textContent = benignVal + '%';
+            }, 300);
+
+            // Smooth scroll to results
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Reset analysis
+        function resetAnalysis() {
+            // Reset state
+            uploadedImages = [];
+            currentImageIndex = 0;
+            fileInput.value = '';
+            
+            // Reset progress bars
+            document.getElementById('barSuspicious').style.width = '0%';
+            document.getElementById('scoreSuspicious').textContent = '--%';
+            document.getElementById('barBenign').style.width = '0%';
+            document.getElementById('scoreBenign').textContent = '--%';
+            
+            // Show upload section
+            resultsSection.style.display = 'none';
+            uploadSection.style.display = 'flex';
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+
+</body>
+</html>
