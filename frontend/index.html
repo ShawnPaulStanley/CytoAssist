@@ -3,97 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CytoAssist – AI Assisted FNAC Screening</title>
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <title>CytoAssist - AI Assisted FNAC Screening</title>
+    <script src="https://unpkg.com/@phosphor-icons/web@2.0.3"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* Zalando Sans Expanded Font */
-        @font-face {
-            font-family: 'Zalando Sans Expanded';
-            src: url('fonts/static/ZalandoSansExpanded-Light.ttf') format('truetype');
-            font-weight: 300;
-            font-style: normal;
-            font-display: swap;
-        }
-        @font-face {
-            font-family: 'Zalando Sans Expanded';
-            src: url('fonts/static/ZalandoSansExpanded-Regular.ttf') format('truetype');
-            font-weight: 400;
-            font-style: normal;
-            font-display: swap;
-        }
-        @font-face {
-            font-family: 'Zalando Sans Expanded';
-            src: url('fonts/static/ZalandoSansExpanded-Medium.ttf') format('truetype');
-            font-weight: 500;
-            font-style: normal;
-            font-display: swap;
-        }
-        @font-face {
-            font-family: 'Zalando Sans Expanded';
-            src: url('fonts/static/ZalandoSansExpanded-SemiBold.ttf') format('truetype');
-            font-weight: 600;
-            font-style: normal;
-            font-display: swap;
-        }
-        @font-face {
-            font-family: 'Zalando Sans Expanded';
-            src: url('fonts/static/ZalandoSansExpanded-Bold.ttf') format('truetype');
-            font-weight: 700;
-            font-style: normal;
-            font-display: swap;
-        }
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Zalando Sans Expanded', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         :root {
-            /* Dark Theme (Default) */
-            --bg-primary: #000000;
-            --bg-secondary: #1a1a1a;
-            --bg-hover: #2a2a2a;
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0a0;
-            --border-color: #333333;
+            /* Dark Theme - Deep Navy */
+            --bg-primary: #0a0f1a;
+            --bg-secondary: #111827;
+            --bg-card: #1a2332;
+            --bg-hover: #232d3f;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-color: #2d3a4f;
+            --accent-primary: #3b82f6;
+            --accent-secondary: #60a5fa;
+            --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            --danger: #ef4444;
+            --danger-light: #fca5a5;
+            --success: #22c55e;
+            --success-light: #86efac;
+            --warning: #f59e0b;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
         }
 
         [data-theme="light"] {
-            /* Light Theme */
-            --bg-primary: #ffffff;
-            --bg-secondary: #f5f5f5;
-            --bg-hover: #e8e8e8;
-            --text-primary: #000000;
-            --text-secondary: #666666;
-            --border-color: #d0d0d0;
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --bg-hover: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
         }
 
         body {
-            font-family: 'Zalando Sans Expanded', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background-color: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
-            scroll-behavior: smooth;
+            -moz-osx-font-smoothing: grayscale;
             transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
         }
 
         /* --- Header --- */
         header {
-            padding: 2rem 0;
+            padding: 1.25rem 0;
             border-bottom: 1px solid var(--border-color);
             position: sticky;
             top: 0;
             background: var(--bg-primary);
             z-index: 100;
-            backdrop-filter: blur(10px);
-            transition: background-color 0.3s ease, border-color 0.3s ease;
+            backdrop-filter: blur(12px);
+            background: rgba(10, 15, 26, 0.9);
+        }
+
+        [data-theme="light"] header {
+            background: rgba(248, 250, 252, 0.9);
         }
 
         .header-container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
             padding: 0 2rem;
             display: flex;
@@ -101,49 +91,72 @@
             align-items: center;
         }
 
-        .logo {
-            font-size: 1.75rem;
-            font-weight: 600;
-            letter-spacing: 0.02em;
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: var(--accent-gradient);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
         }
 
         .subtitle {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            font-weight: 400;
-            margin-top: 0.25rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 0.125rem;
+            letter-spacing: 0.02em;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
 
         .theme-toggle {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            padding: 0.5rem 1rem;
-            border-radius: 8px;
+            padding: 0.625rem 1rem;
+            border-radius: var(--radius-md);
             cursor: pointer;
             font-size: 0.875rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
+            font-weight: 600;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-family: 'Zalando Sans Expanded', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
 
         .theme-toggle:hover {
             background: var(--bg-hover);
-            transform: scale(1.05);
+            border-color: var(--accent-primary);
         }
 
         .theme-toggle i {
-            font-size: 1.25rem;
-            display: flex;
-            align-items: center;
+            font-size: 1.125rem;
         }
 
         /* --- Container --- */
         .container {
-            max-width: 1200px;
+            max-width: 1280px;
             margin: 0 auto;
             padding: 0 2rem;
         }
@@ -151,57 +164,102 @@
         /* --- Section Spacing --- */
         section {
             padding: 4rem 0;
-            min-height: 100vh;
+            min-height: calc(100vh - 80px);
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
 
         section:first-of-type {
-            padding-top: 2rem;
+            padding-top: 3rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
         }
 
         .section-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 0 auto;
         }
 
         /* --- Upload Section --- */
         #uploadSection {
-            min-height: 80vh;
+            min-height: calc(100vh - 100px);
         }
 
         .upload-area {
             border: 2px dashed var(--border-color);
-            border-radius: 12px;
+            border-radius: var(--radius-lg);
             padding: 4rem 2rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
             background-color: var(--bg-secondary);
-            max-width: 600px;
+            max-width: 640px;
             margin: 0 auto;
+            position: relative;
+            overflow: hidden;
         }
 
-        .upload-area:hover, .upload-area.dragover {
-            border-color: var(--text-primary);
-            background-color: var(--bg-hover);
-            transform: translateY(-2px);
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--accent-gradient);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
-        .upload-icon {
-            width: 64px;
-            height: 64px;
+        .upload-area:hover,
+        .upload-area.dragover {
+            border-color: var(--accent-primary);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .upload-area:hover::before,
+        .upload-area.dragover::before {
+            opacity: 0.05;
+        }
+
+        .upload-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .upload-icon-wrapper {
+            width: 80px;
+            height: 80px;
             margin: 0 auto 1.5rem;
-            opacity: 0.7;
+            background: var(--bg-card);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--border-color);
+        }
+
+        .upload-icon-wrapper i {
+            font-size: 2rem;
+            color: var(--accent-primary);
         }
 
         .upload-text {
             font-size: 1.25rem;
-            font-weight: 500;
+            font-weight: 600;
             margin-bottom: 0.5rem;
+            letter-spacing: -0.01em;
         }
 
         .upload-subtext {
@@ -209,32 +267,48 @@
             font-size: 0.875rem;
         }
 
-        #fileInput {
-            display: none;
+        .upload-formats {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
         }
 
-        button, input {
-            font-family: 'Zalando Sans Expanded', -apple-system, BlinkMacSystemFont, sans-serif;
+        .format-badge {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 0.375rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        #fileInput {
+            display: none;
         }
 
         /* --- Review Section --- */
         #reviewSection {
             display: none;
-            min-height: 90vh;
+            min-height: calc(100vh - 100px);
         }
 
         .image-carousel {
             position: relative;
             max-width: 800px;
-            margin: 2rem auto;
+            margin: 0 auto;
         }
 
         .carousel-container {
             position: relative;
             border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: var(--radius-lg);
             overflow: hidden;
             background: var(--bg-secondary);
+            box-shadow: var(--shadow-md);
         }
 
         .carousel-slide {
@@ -248,68 +322,87 @@
 
         .carousel-slide img {
             width: 100%;
-            height: 500px;
+            height: 480px;
             object-fit: contain;
             background: var(--bg-primary);
         }
 
         .carousel-info {
-            padding: 1rem;
-            background: var(--bg-secondary);
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
             border-top: 1px solid var(--border-color);
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
             font-size: 0.875rem;
             color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .carousel-info i {
+            font-size: 1rem;
         }
 
         .carousel-controls {
             display: flex;
             justify-content: center;
             gap: 1rem;
-            margin-top: 2rem;
+            margin-top: 1.5rem;
         }
 
         .carousel-btn {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            padding: 0.75rem 2rem;
-            border-radius: 8px;
+            padding: 0.75rem 1.75rem;
+            border-radius: var(--radius-md);
             cursor: pointer;
-            font-size: 1rem;
-            font-weight: 500;
+            font-size: 0.875rem;
+            font-weight: 600;
             transition: all 0.2s ease;
-            font-family: 'Zalando Sans Expanded', sans-serif;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .carousel-btn:hover:not(:disabled) {
             background: var(--bg-hover);
-            border-color: var(--text-primary);
+            border-color: var(--accent-primary);
         }
 
         .carousel-btn:disabled {
-            opacity: 0.3;
+            opacity: 0.4;
             cursor: not-allowed;
         }
 
         .submit-btn {
-            display: block;
-            margin: 3rem auto 0;
-            background: var(--text-primary);
-            color: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.625rem;
+            margin: 2.5rem auto 0;
+            background: var(--accent-gradient);
+            color: white;
             border: none;
-            padding: 1rem 3rem;
-            border-radius: 8px;
-            font-size: 1.125rem;
-            font-weight: 600;
+            padding: 1rem 2.5rem;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-family: 'Zalando Sans Expanded', sans-serif;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
         }
 
         .submit-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+        }
+
+        .submit-btn i {
+            font-size: 1.25rem;
         }
 
         /* --- Loading Section --- */
@@ -321,14 +414,35 @@
             text-align: center;
         }
 
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .spinner-wrapper {
+            width: 80px;
+            height: 80px;
+            position: relative;
+        }
+
         .spinner {
-            width: 60px;
-            height: 60px;
-            border: 3px solid var(--border-color);
-            border-top: 3px solid var(--text-primary);
+            width: 100%;
+            height: 100%;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--accent-primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 1.5rem;
+        }
+
+        .spinner-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.75rem;
+            color: var(--accent-primary);
         }
 
         @keyframes spin {
@@ -338,6 +452,12 @@
 
         .loading-text {
             font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .loading-subtext {
+            font-size: 0.875rem;
             color: var(--text-secondary);
         }
 
@@ -349,48 +469,90 @@
         .results-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 2rem;
+            gap: 1.5rem;
             margin-top: 2rem;
         }
 
         .result-card {
-            background: var(--bg-secondary);
+            background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 2rem;
+            border-radius: var(--radius-lg);
+            padding: 1.75rem;
+            box-shadow: var(--shadow-sm);
         }
 
-        .card-title {
-            font-size: 1.125rem;
-            font-weight: 600;
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
             margin-bottom: 1.5rem;
-            padding-bottom: 0.75rem;
+            padding-bottom: 1rem;
             border-bottom: 1px solid var(--border-color);
         }
 
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-primary);
+            font-size: 1.25rem;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
         .confidence-item {
-            margin-bottom: 2rem;
+            margin-bottom: 1.75rem;
+        }
+
+        .confidence-item:last-of-type {
+            margin-bottom: 0;
         }
 
         .confidence-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 0.75rem;
-            font-size: 0.875rem;
+            align-items: center;
+            margin-bottom: 0.625rem;
         }
 
         .confidence-label {
-            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .confidence-label i {
+            font-size: 1rem;
         }
 
         .confidence-value {
-            font-weight: 600;
-            font-size: 1rem;
+            font-weight: 800;
+            font-size: 1.25rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .value-suspicious {
+            color: var(--danger);
+        }
+
+        .value-benign {
+            color: var(--success);
         }
 
         .progress-track {
             height: 10px;
-            background: var(--bg-primary);
+            background: var(--bg-secondary);
             border-radius: 5px;
             overflow: hidden;
             border: 1px solid var(--border-color);
@@ -399,21 +561,40 @@
         .progress-bar {
             height: 100%;
             border-radius: 5px;
-            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
             width: 0%;
         }
 
         .bar-suspicious { 
-            background: linear-gradient(90deg, #ff4444, #cc0000);
+            background: linear-gradient(90deg, #f87171, #ef4444);
         }
         
         .bar-benign { 
-            background: linear-gradient(90deg, #44ff44, #00cc00);
+            background: linear-gradient(90deg, #4ade80, #22c55e);
+        }
+
+        .explanation-box {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border-left: 3px solid var(--accent-primary);
+        }
+
+        .explanation-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
         }
 
         .explanation-text {
-            margin-top: 1.5rem;
-            font-size: 0.875rem;
+            font-size: 0.8125rem;
             color: var(--text-secondary);
             line-height: 1.6;
         }
@@ -422,14 +603,13 @@
         .gradcam-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-top: 1.5rem;
+            gap: 1rem;
         }
 
         .gradcam-box {
             position: relative;
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: var(--radius-md);
             overflow: hidden;
             background: var(--bg-primary);
         }
@@ -437,7 +617,7 @@
         .gradcam-box img,
         .gradcam-box canvas {
             width: 100%;
-            height: 300px;
+            height: 280px;
             object-fit: contain;
         }
 
@@ -446,56 +626,110 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 0.5rem;
-            text-align: center;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.85));
+            padding: 1.5rem 0.75rem 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.375rem;
             font-size: 0.75rem;
-            font-weight: 500;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.04em;
+            color: white;
+        }
+
+        .gradcam-label i {
+            font-size: 0.875rem;
         }
 
         /* --- Reset Section --- */
         .reset-section {
             text-align: center;
-            padding: 4rem 0;
+            padding: 3rem 0;
             border-top: 1px solid var(--border-color);
-            margin-top: 3rem;
+            margin-top: 2.5rem;
         }
 
         .reset-btn {
             background: transparent;
-            border: 2px solid var(--text-primary);
+            border: 2px solid var(--border-color);
             color: var(--text-primary);
-            padding: 1rem 3rem;
-            border-radius: 8px;
-            font-size: 1rem;
+            padding: 0.875rem 2rem;
+            border-radius: var(--radius-md);
+            font-size: 0.9375rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Zalando Sans Expanded', sans-serif;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.625rem;
         }
 
         .reset-btn:hover {
-            background: var(--text-primary);
-            color: var(--bg-primary);
-            transform: scale(1.05);
+            background: var(--bg-hover);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .reset-btn i {
+            font-size: 1.125rem;
+        }
+
+        /* --- Footer --- */
+        .disclaimer-footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 2rem;
+        }
+
+        .disclaimer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .disclaimer-badge i {
+            color: var(--warning);
         }
 
         /* --- Responsive Design --- */
         @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
             .results-grid,
             .gradcam-container {
                 grid-template-columns: 1fr;
             }
             
             section {
-                padding: 3rem 0;
+                padding: 2.5rem 0;
                 min-height: auto;
             }
             
             .carousel-slide img {
-                height: 400px;
+                height: 360px;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .upload-area {
+                padding: 3rem 1.5rem;
             }
         }
 
@@ -510,30 +744,45 @@
     <!-- Header -->
     <header>
         <div class="header-container">
-            <div>
-                <div class="logo">CytoAssist</div>
-                <div class="subtitle">AI-Assisted FNAC Screening System</div>
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="ph-bold ph-microscope"></i>
+                </div>
+                <div>
+                    <div class="logo-text">CytoAssist</div>
+                    <div class="subtitle">AI-Powered FNAC Screening</div>
+                </div>
             </div>
-            <button class="theme-toggle" id="themeToggle">
-                <i class="ph ph-sun" id="themeIcon"></i>
-                <span id="themeText">Light Mode</span>
-            </button>
+            <div class="header-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="ph-bold ph-sun" id="themeIcon"></i>
+                    <span id="themeText">Light</span>
+                </button>
+            </div>
         </div>
     </header>
 
     <!-- Upload Section -->
     <section id="uploadSection">
         <div class="container">
-            <h2 class="section-title">Upload Tissue Cell Images</h2>
+            <div class="section-header">
+                <h2 class="section-title">Upload Cytology Images</h2>
+                <p class="section-subtitle">Upload tissue cell images for AI-assisted analysis and classification</p>
+            </div>
             
             <div class="upload-area" id="dropZone">
-                <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="17 8 12 3 7 8"></polyline>
-                    <line x1="12" y1="3" x2="12" y2="15"></line>
-                </svg>
-                <div class="upload-text">Drop images here or click to browse</div>
-                <div class="upload-subtext">Supports PNG, JPG, JPEG formats • Multiple images allowed</div>
+                <div class="upload-content">
+                    <div class="upload-icon-wrapper">
+                        <i class="ph-bold ph-upload-simple"></i>
+                    </div>
+                    <div class="upload-text">Drop images here or click to browse</div>
+                    <div class="upload-subtext">Upload cytology images for screening analysis</div>
+                    <div class="upload-formats">
+                        <span class="format-badge">PNG</span>
+                        <span class="format-badge">JPG</span>
+                        <span class="format-badge">JPEG</span>
+                    </div>
+                </div>
                 <input type="file" id="fileInput" accept="image/png, image/jpeg, image/jpg" multiple>
             </div>
         </div>
@@ -542,48 +791,78 @@
     <!-- Review Section -->
     <section id="reviewSection">
         <div class="container">
-            <h2 class="section-title">Review Uploaded Images</h2>
+            <div class="section-header">
+                <h2 class="section-title">Review Images</h2>
+                <p class="section-subtitle">Verify uploaded images before submitting for analysis</p>
+            </div>
             
             <div class="image-carousel">
                 <div class="carousel-container">
                     <div id="carouselSlides"></div>
                     <div class="carousel-info">
+                        <i class="ph-bold ph-images"></i>
                         <span id="imageCounter">Image 1 of 1</span>
                     </div>
                 </div>
                 
                 <div class="carousel-controls">
-                    <button class="carousel-btn" id="prevBtn" disabled>Previous</button>
-                    <button class="carousel-btn" id="nextBtn">Next</button>
+                    <button class="carousel-btn" id="prevBtn" disabled>
+                        <i class="ph-bold ph-caret-left"></i>
+                        Previous
+                    </button>
+                    <button class="carousel-btn" id="nextBtn">
+                        Next
+                        <i class="ph-bold ph-caret-right"></i>
+                    </button>
                 </div>
             </div>
             
-            <button class="submit-btn" id="submitBtn">Submit for Analysis</button>
+            <button class="submit-btn" id="submitBtn">
+                <i class="ph-bold ph-scan"></i>
+                Run Analysis
+            </button>
         </div>
     </section>
 
     <!-- Loading Section -->
     <section id="loadingSection">
         <div class="container">
-            <div class="spinner"></div>
-            <div class="loading-text">Analyzing tissue morphology...</div>
+            <div class="loading-container">
+                <div class="spinner-wrapper">
+                    <div class="spinner"></div>
+                    <i class="ph-bold ph-dna spinner-icon"></i>
+                </div>
+                <div class="loading-text">Analyzing Tissue Morphology</div>
+                <div class="loading-subtext">Running deep learning model inference...</div>
+            </div>
         </div>
     </section>
 
     <!-- Results Section -->
     <section id="resultsSection">
         <div class="container">
-            <h2 class="section-title">Analysis Results</h2>
+            <div class="section-header">
+                <h2 class="section-title">Analysis Results</h2>
+                <p class="section-subtitle">AI-generated screening assessment and attention visualization</p>
+            </div>
             
             <div class="results-grid">
                 <!-- Confidence Scores Card -->
                 <div class="result-card">
-                    <div class="card-title">Screening Assessment</div>
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="ph-bold ph-chart-bar"></i>
+                        </div>
+                        <div class="card-title">Screening Assessment</div>
+                    </div>
                     
                     <div class="confidence-item">
                         <div class="confidence-header">
-                            <span class="confidence-label">Suspicious Features</span>
-                            <span class="confidence-value" id="scoreSuspicious">--%</span>
+                            <span class="confidence-label">
+                                <i class="ph-bold ph-warning-circle"></i>
+                                Suspicious Features
+                            </span>
+                            <span class="confidence-value value-suspicious" id="scoreSuspicious">--%</span>
                         </div>
                         <div class="progress-track">
                             <div class="progress-bar bar-suspicious" id="barSuspicious"></div>
@@ -592,43 +871,79 @@
 
                     <div class="confidence-item">
                         <div class="confidence-header">
-                            <span class="confidence-label">Benign Features</span>
-                            <span class="confidence-value" id="scoreBenign">--%</span>
+                            <span class="confidence-label">
+                                <i class="ph-bold ph-check-circle"></i>
+                                Benign Features
+                            </span>
+                            <span class="confidence-value value-benign" id="scoreBenign">--%</span>
                         </div>
                         <div class="progress-track">
                             <div class="progress-bar bar-benign" id="barBenign"></div>
                         </div>
                     </div>
 
-                    <div class="explanation-text">
-                        <strong>Clinical Note:</strong> These confidence scores represent the AI model's assessment based on cellular morphology patterns. Results should be interpreted by qualified medical professionals and are not diagnostic.
+                    <div class="explanation-box">
+                        <div class="explanation-title">
+                            <i class="ph-bold ph-info"></i>
+                            Clinical Note
+                        </div>
+                        <div class="explanation-text">
+                            These confidence scores represent the AI model's assessment based on cellular morphology patterns. Results should be interpreted by qualified medical professionals and are not diagnostic.
+                        </div>
                     </div>
                 </div>
 
                 <!-- GRAD CAM++ Explanation Card -->
                 <div class="result-card">
-                    <div class="card-title">Model Attention Map (GRAD CAM++)</div>
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="ph-bold ph-eye"></i>
+                        </div>
+                        <div class="card-title">Model Attention Map</div>
+                    </div>
                     
                     <div class="gradcam-container">
                         <div class="gradcam-box">
                             <img id="imgOriginal" src="" alt="Original Image">
-                            <div class="gradcam-label">Original Image</div>
+                            <div class="gradcam-label">
+                                <i class="ph-bold ph-image"></i>
+                                Original
+                            </div>
                         </div>
                         <div class="gradcam-box">
-                            <canvas id="heatmapCanvas" style="width: 100%; height: 300px;"></canvas>
-                            <div class="gradcam-label">GRAD CAM++ Heatmap</div>
+                            <canvas id="heatmapCanvas"></canvas>
+                            <div class="gradcam-label">
+                                <i class="ph-bold ph-flame"></i>
+                                Grad-CAM
+                            </div>
                         </div>
                     </div>
 
-                    <div class="explanation-text">
-                        The highlighted regions indicate cellular areas that most influenced the model's prediction. Warmer colors (red/yellow) represent higher attention, showing which morphological features were most significant in the analysis.
+                    <div class="explanation-box">
+                        <div class="explanation-title">
+                            <i class="ph-bold ph-lightbulb"></i>
+                            How to Read
+                        </div>
+                        <div class="explanation-text">
+                            Highlighted regions indicate areas that most influenced the model's prediction. Warmer colors (red/yellow) represent higher attention to significant morphological features.
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Reset Option -->
             <div class="reset-section">
-                <button class="reset-btn" onclick="resetAnalysis()">Upload New Samples</button>
+                <button class="reset-btn" onclick="resetAnalysis()">
+                    <i class="ph-bold ph-arrow-counter-clockwise"></i>
+                    Analyze New Sample
+                </button>
+            </div>
+
+            <div class="disclaimer-footer">
+                <div class="disclaimer-badge">
+                    <i class="ph-bold ph-warning"></i>
+                    For research and educational purposes only. Not for clinical diagnosis.
+                </div>
             </div>
         </div>
     </section>
@@ -645,8 +960,8 @@
         const savedTheme = localStorage.getItem('theme') || 'dark';
         if (savedTheme === 'light') {
             html.setAttribute('data-theme', 'light');
-            themeIcon.className = 'ph ph-moon';
-            themeText.textContent = 'Dark Mode';
+            themeIcon.className = 'ph-bold ph-moon';
+            themeText.textContent = 'Dark';
         }
 
         // Toggle theme
@@ -656,12 +971,12 @@
             
             if (newTheme === 'light') {
                 html.setAttribute('data-theme', 'light');
-                themeIcon.className = 'ph ph-moon';
-                themeText.textContent = 'Dark Mode';
+                themeIcon.className = 'ph-bold ph-moon';
+                themeText.textContent = 'Dark';
             } else {
                 html.removeAttribute('data-theme');
-                themeIcon.className = 'ph ph-sun';
-                themeText.textContent = 'Light Mode';
+                themeIcon.className = 'ph-bold ph-sun';
+                themeText.textContent = 'Light';
             }
             
             localStorage.setItem('theme', newTheme);
@@ -806,7 +1121,6 @@
                 const data = imageData.data;
                 
                 // Generate attention map (simulated - in production comes from backend)
-                // Focus attention on center-right area (typical for cell clusters)
                 const centerX = canvas.width * 0.6;
                 const centerY = canvas.height * 0.4;
                 const maxRadius = Math.min(canvas.width, canvas.height) * 0.4;
@@ -815,39 +1129,32 @@
                     for (let x = 0; x < canvas.width; x++) {
                         const idx = (y * canvas.width + x) * 4;
                         
-                        // Calculate distance from attention center
                         const dx = x - centerX;
                         const dy = y - centerY;
                         const distance = Math.sqrt(dx * dx + dy * dy);
                         
-                        // Generate attention value (0-1) with some randomness
                         let attention = Math.max(0, 1 - (distance / maxRadius));
                         attention = Math.pow(attention, 1.5) * (0.7 + Math.random() * 0.3);
                         
                         if (attention > 0.2) {
-                            // Apply heatmap color (jet colormap)
                             let r, g, b;
                             if (attention < 0.4) {
-                                // Blue to Cyan
                                 const t = attention / 0.4;
                                 r = 0;
                                 g = Math.floor(t * 255);
                                 b = 255;
                             } else if (attention < 0.6) {
-                                // Cyan to Yellow
                                 const t = (attention - 0.4) / 0.2;
                                 r = Math.floor(t * 255);
                                 g = 255;
                                 b = Math.floor((1 - t) * 255);
                             } else {
-                                // Yellow to Red
                                 const t = (attention - 0.6) / 0.4;
                                 r = 255;
                                 g = Math.floor((1 - t) * 255);
                                 b = 0;
                             }
                             
-                            // Blend with original image (alpha blending)
                             const alpha = attention * 0.5;
                             data[idx] = data[idx] * (1 - alpha) + r * alpha;
                             data[idx + 1] = data[idx + 1] * (1 - alpha) + g * alpha;
