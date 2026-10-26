@@ -49,13 +49,20 @@ def get_batch_image_mtime() -> Optional[float]:
 
 
 # Terminal logging utilities
+def _console_safe_text(message: str) -> str:
+    """Replace characters unsupported by the active console encoding."""
+    encoding = getattr(sys.stdout, "encoding", None) or "utf-8"
+    return message.encode(encoding, errors="replace").decode(encoding)
+
+
 def log_progress(message: str, progress: int = None):
     """Log progress to terminal with timestamp."""
     timestamp = datetime.now().strftime("%H:%M:%S")
     if progress is not None:
-        print(f"[{timestamp}] {message} ({progress}%)", flush=True)
+        output = f"[{timestamp}] {message} ({progress}%)"
     else:
-        print(f"[{timestamp}] {message}", flush=True)
+        output = f"[{timestamp}] {message}"
+    print(_console_safe_text(output), flush=True)
 
 
 def log_section(title: str):
@@ -404,7 +411,7 @@ def apply_colormap_and_overlay(
 
     Uses matplotlib colormap to avoid dependencies like OpenCV.
     """
-    import matplotlib.cm as cm
+    import matplotlib
 
     base_np = np.array(base_image_rgb).astype(np.float32) / 255.0
 
@@ -413,8 +420,8 @@ def apply_colormap_and_overlay(
     heatmap_img = heatmap_img.resize(base_image_rgb.size, resample=Image.BILINEAR)
     heatmap_resized = np.array(heatmap_img).astype(np.float32) / 255.0
 
-    # Apply colormap (jet) -> RGBA -> RGB
-    cmap = cm.get_cmap("jet")
+    # Use the current Matplotlib colormap API; get_cmap was removed in newer releases.
+    cmap = matplotlib.colormaps["jet"]
     colored = cmap(heatmap_resized)[:, :, :3]  # drop alpha
 
     # Blend
@@ -466,7 +473,11 @@ with st.sidebar:
     st.subheader("Batch Input Monitor")
     
     # Auto-refresh toggle for batch folder monitoring
-    auto_watch = st.toggle("Watch batch_input folder", value=True, help="Automatically load images from batch_input folder")
+    auto_watch = st.toggle(
+        "Watch batch_input folder",
+        value=False,
+        help="Opt in to automatically load images from batch_input folder.",
+    )
     
     if auto_watch:
         # Get current file info
@@ -513,7 +524,7 @@ st.divider()
 
 st.header("Upload Image")
 
-# Check for batch input image first
+# Batch processing is opt-in; otherwise the user selects an image explicitly.
 batch_image_path = get_batch_input_image() if auto_watch else None
 
 if batch_image_path:
@@ -599,6 +610,9 @@ with exp_left:
 
 with exp_right:
     st.subheader("Model Attention Map (Grad-CAM)")
+    # Keep the downstream frontend renderable if optional explainability fails.
+    overlay_pil = original_pil
+    cam = None
 
     try:
         # Target the last convolutional layer of ResNet18
@@ -612,8 +626,6 @@ with exp_right:
             heatmap_01 = cam.generate(input_tensor=input_tensor, class_index=pred_idx)
             log_progress("Heatmap normalized and ready ✓", 100)
 
-        cam.close()
-
         overlay_pil = apply_colormap_and_overlay(original_pil, heatmap_01, alpha=0.45)
         st.image(overlay_pil, caption="Model Attention Map (Grad-CAM)", use_container_width=True)
 
@@ -624,6 +636,9 @@ with exp_right:
     except Exception as e:
         st.error("Grad-CAM could not be generated.")
         st.code(str(e))
+    finally:
+        if cam is not None:
+            cam.close()
 
 st.divider()
 

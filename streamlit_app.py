@@ -16,4 +16,5 @@ os.chdir(backend_dir)
 
 # Set __file__ for the executed script so path resolution works
 app_path = os.path.join(backend_dir, "app.py")
-exec(compile(open(app_path).read(), app_path, 'exec'), {'__file__': app_path, '__name__': '__main__'})
+with open(app_path, encoding="utf-8") as app_file:
+    exec(compile(app_file.read(), app_path, 'exec'), {'__file__': app_path, '__name__': '__main__'})
